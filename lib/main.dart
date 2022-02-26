@@ -56,50 +56,48 @@ class MyHomePage extends HookWidget {
       },
       keys: [controller.value.metaData],
     );
-
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: FittedBox(
-                fit: BoxFit.fitHeight,
-                child: YoutubePlayer(
-                  controller: controller,
-                  bottomActions: [
-                    if (!metaData.value.isLive) ...[
-                      RemainingDuration(),
-                      ProgressBar(
-                        isExpanded: true,
-                        colors: const ProgressBarColors(
-                          backgroundColor: Colors.grey,
-                          bufferedColor: Colors.blueGrey,
-                          playedColor: Colors.redAccent,
-                          handleColor: Colors.red,
-                        ),
-                      ),
-                    ],
-                    FullScreenButton(),
-                  ],
-                  onEnded: (metadata) {
-                    print('ended');
-                    // controller.load(metadata.videoId);
-                  },
-                ),
-              ),
-            ),
-            Center(
-              child: TextButton(
-                child: const Text('Load Video'),
-                onPressed: () {
-                  controller.load('Z4haMzs_ins');
-                },
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: controller,
+        bottomActions: [
+          if (!metaData.value.isLive) ...[
+            RemainingDuration(),
+            ProgressBar(
+              isExpanded: true,
+              colors: const ProgressBarColors(
+                backgroundColor: Colors.grey,
+                bufferedColor: Colors.blueGrey,
+                playedColor: Colors.redAccent,
+                handleColor: Colors.red,
               ),
             ),
           ],
-        ),
+          FullScreenButton(),
+        ],
+        onEnded: (metadata) {
+          print('ended');
+          // controller.load(metadata.videoId);
+        },
       ),
+      builder: (context, player) {
+        return Scaffold(
+          body: SafeArea(
+            child: Column(
+              children: [
+                player,
+                Center(
+                  child: TextButton(
+                    child: const Text('Load Video'),
+                    onPressed: () {
+                      controller.load('Z4haMzs_ins');
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
